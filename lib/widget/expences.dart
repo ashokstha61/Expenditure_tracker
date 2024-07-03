@@ -2,6 +2,7 @@ import 'package:extenditure_app/widget/chart/chart.dart';
 import 'package:extenditure_app/widget/expances_list/expenses_list.dart';
 import 'package:extenditure_app/model/expense.dart';
 import 'package:extenditure_app/widget/new_expence.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -31,6 +32,7 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+      useSafeArea: true,
       context: context,
       isScrollControlled: true,
       builder: (ctx) => NewExpense(onAddExpense: _addExpense),
@@ -68,6 +70,7 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     Widget mainContent = Center(
       child: Text('No expenses yet'),
     );
@@ -87,14 +90,25 @@ class _ExpensesState extends State<Expenses> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _regExpenses),
-          Expanded(
-            child: mainContent,
-          ),
-        ],
-      ),
+      body: screenWidth < 600
+          ? Column(
+              children: [
+                Chart(expenses: _regExpenses),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: Chart(expenses: _regExpenses),
+                ),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            ),
     );
   }
 }
